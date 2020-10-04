@@ -19,6 +19,9 @@ int ColumnaEnJuego = 9;
 Boolean FijarFicha = false;
 int FichaEnJuego;
 int pindice;
+ArrayList<Integer> ListaFigurasEnTablero = new ArrayList<Integer>(5);
+ArrayList<Integer> ListaCoorXEnTablero = new ArrayList<Integer>(5);
+ArrayList<Integer> ListaCoorYEnTablero = new ArrayList<Integer>(5);
 void setup()
    {
    img = loadImage("postertetris.png");
@@ -100,22 +103,36 @@ void draw()
    }
    stroke(235);
    drawFigura();
-   TIEMPO(500);
+   BajarFicha(500);
+   if (ListaFigurasEnTablero.isEmpty()== false){
+     for (int i=0;i<ListaFigurasEnTablero.size();i++){
+       Rotar(#94C0FF,ListaFigurasEnTablero.get(i),ListaCoorXEnTablero.get(i),ListaCoorYEnTablero.get(i));}
+    }
    fill(#FFBA38);
    square(770, 400, 35);
    square(805, 400, 35);
    square(805, 435, 35);
    square(805, 470, 35);
 }
-void Rotar(int colour, int []lista){
+void IniciarVariables(){
+  ListaFigurasEnTablero.add(FichaEnJuego);
+  ListaCoorXEnTablero.add(movimientox);
+  ListaCoorYEnTablero.add(movimientoy);
+  FilaEnJuego = 0;
+  ColumnaEnJuego = 9;
+  Rotation = 0;
+  PiezaRandom = Piezas[int(random(7))];
+  movimientoy = 30;
+  movimientox = 490; 
+}
+void Rotar(int colour, int FichaADibujar, int x, int y){
 fill(colour);
-FichaEnJuego = lista[Rotation];
 for (int i = 0; i <= 15; i++) {
-  if ((lista[Rotation] & (1 << 15 - i)) != 0) {
-     rect((i % 4) * 30 + movimientox, (((i / 4) | 0) * 30) + movimientoy , 30, 30); } 
+  if ((FichaADibujar & (1 << 15 - i)) != 0) {
+     rect((i % 4) * 30 + x, (((i / 4) | 0) * 30) + y , 30, 30); } 
   }
  }
-void TIEMPO(int rangoTiempo){
+void BajarFicha(int rangoTiempo){
   Boolean coliciona = GuadarEnMatriz(FichaEnJuego);
   if ((coliciona == false)&&(millis() - Segundos >= rangoTiempo)){
      movimientoy += 30;
@@ -124,24 +141,35 @@ void TIEMPO(int rangoTiempo){
     }
   else if (coliciona == true){
      FijarFicha = true;
-          }
+     FilaEnJuego -= 1;
+     GuadarEnMatriz(FichaEnJuego);
+     IniciarVariables();
+     
+  }
 }
 void drawFigura() {
   push();
   if ( PiezaRandom == "T")
-     Rotar(#CA08CD, T); 
+     FichaEnJuego = T[Rotation];
+     Rotar(#CA08CD, FichaEnJuego, movimientox, movimientoy); 
   if (PiezaRandom == "L")
-     Rotar(#FFBA38, L);
+     FichaEnJuego = L[Rotation];
+     Rotar(#FFBA38, FichaEnJuego, movimientox, movimientoy);
   if (PiezaRandom == "J")
-     Rotar(#7AF0F9, J);
+     FichaEnJuego = J[Rotation];
+     Rotar(#7AF0F9, FichaEnJuego, movimientox, movimientoy);
   if (PiezaRandom == "O")
-     Rotar(#F9F227, O);
+     FichaEnJuego = O[Rotation];
+     Rotar(#F9F227, FichaEnJuego, movimientox, movimientoy);
   if (PiezaRandom == "S")
-         Rotar(#EE1106, S);
+      FichaEnJuego = S[Rotation];
+      Rotar(#EE1106, FichaEnJuego, movimientox, movimientoy);
   if (PiezaRandom == "Z")
-        Rotar(#67BD52, Z);
+       FichaEnJuego = Z[Rotation];
+       Rotar(#67BD52, FichaEnJuego,movimientox, movimientoy);
    if (PiezaRandom == "I")
-        Rotar(#4248FF, I);
+       FichaEnJuego = I[Rotation];
+       Rotar(#4248FF, FichaEnJuego, movimientox, movimientoy);
   pop();
 }
 void keyPressed() {
@@ -166,7 +194,7 @@ void keyPressed() {
            ColumnaEnJuego += 1;
     }
       else if(keyCode == DOWN){
-         TIEMPO(45);
+         BajarFicha(45);
       }
    Rotation = Rotation < 0 ? 3 : Rotation % 4;
    }
