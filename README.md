@@ -1,5 +1,5 @@
 # TetrisCode
-##Tetrominos
+## Tetrominos
 En el tetris existen 7 tetrominos. Cada unos de ellos fue representado usando una lista de numeros enteros de su representacion binaria usando 16bits para cada rotacion. 
 Por ejemplo si tenemos el tetromino I:
 1000
@@ -7,9 +7,9 @@ Por ejemplo si tenemos el tetromino I:
 1000
 1000
 = 4369 - Es el primer elemento de la lista I
-###Rotaciones
+## Rotaciones
 Para la rotacion se itero por la lista del tetromino.Siendo la variable rotacion el indice de la lista.Cuando el usuario oprimela tecla del espacio, se aumenta la rotacion, lo que produce una rotacion a la derecha cuando oprime la flecha para arriba se rota hacia la izquierda.
-##Guardar en Memoria Y Colisiones.
+## Guardar en Memoria Y Colisiones.
 Para guardar el estado actual de el tablero se utilizo una matriz de 21 filas y 16 columnas. El tablero de este tetris es de 20 x 14, se agrego una fila y dos columnas adicionales de 1s para realizar los limtes.
 La funcion Guardar en Memoria se llama varias veces, cada vez que hay movimiento o una ficha nueva. Esta función realizar varias cosas. Primero evalua de acuerdo con la ficha actual y su rotacion actual(guarda en Variable FichaEnJuego) cabe en tal posicion u ocurre una colisión. Para esto recorre los bits de la rotacion, si el bit actual es diferente a 0, se evalua si existe un espacio para dicho bit para eso se mira la Matriz. Sino hay espacio para dicho tetromino colisiona se vuelve verdadero. Es importante recalcar que aunque se este constantemente evaluando colisiones la ficha no se guarda en la matriz hasta que llegue a la parte de abajo del tablero o a colsionar con una ficha. Para esto es la segunda funcion que tiene esta función, para fijar la ficha. Cuando la ficha ya no puede mover más se guarda esta ficha en la matriz para futuras colisiones y eliminar fichas.
 ```
@@ -43,10 +43,10 @@ return Coliciona;
 }
 
 ```
-##Movimiento de Tetrominos
-###Movimiento en x
+## Movimiento de Tetrominos
+### Movimiento en x
 Cuando el usuario oprime las flechas de derecha y izqueirda, se evalua si se puede mover a dicho sitio si, si se aumenta el valor en x una casilla y la columna en la eventualmente se va a guardar en memoria.
-###Movimiento en Y
+### Movimiento en Y
 En el juego cada 500 milisegundos se baja el tetromino una casilla, si el usuario oprime la flecha de abajo es cada 45. Si la ficha colisiona con el limite de abajo o con otro ficha se fija la ficha, no disminuye más su posición y se reestablecen los valores a los originales para poder que la siguiente ficha baje.
 ```
 void BajarFicha(int rangoTiempo){
