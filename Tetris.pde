@@ -16,8 +16,9 @@ int Segundos;
 int [][] matrix = new int [21][16];
 int FilaEnJuego = 0;
 int ColumnaEnJuego = 9;
-Boolean Coliciona = false;
 Boolean FijarFicha = false;
+int FichaEnJuego;
+int pindice;
 void setup()
    {
    img = loadImage("postertetris.png");
@@ -27,9 +28,11 @@ void setup()
    textFont(myFont);
    textAlign(CENTER, CENTER);
    text("JULIANA", 800, 680);
-   for(int i = 0; i <21;i ++){
-       matrix [i][0] = 1;
-       matrix [i][15]= 1;}
+   for(int indice = 0; indice <20;indice ++){
+       pindice =  pindice >= 15 ? 15 : indice;
+       matrix [indice][0] = 1;
+       matrix [indice][15]= 1;
+       matrix [20][pindice] = 1;}
    }
 void ElimanarFila()
   { 
@@ -43,7 +46,7 @@ void lineasx(int x, int y)
     line(x, y + 30, 670, y + 30);
    }
 void draw()
-{
+{  
    stroke(0);
    fill(185,131,77);
    rect(215, 45, 470, 630);
@@ -106,18 +109,20 @@ void draw()
 }
 void Rotar(int colour, int []lista){
 fill(colour);
+FichaEnJuego = lista[Rotation];
 for (int i = 0; i <= 15; i++) {
   if ((lista[Rotation] & (1 << 15 - i)) != 0) {
      rect((i % 4) * 30 + movimientox, (((i / 4) | 0) * 30) + movimientoy , 30, 30); } 
+  }
  }
- GuadarEnMatriz(lista[Rotation]);
-}
 void TIEMPO(int rangoTiempo){
-  if ((movimientoy < 600)&&(millis() - Segundos >= rangoTiempo)){
+  Boolean coliciona = GuadarEnMatriz(FichaEnJuego);
+  if ((coliciona == false)&&(millis() - Segundos >= rangoTiempo)){
      movimientoy += 30;
+     FilaEnJuego += 1;
      Segundos = millis();
     }
-  else if (movimientoy >= 600){
+  else if (coliciona == true){
      FijarFicha = true;
           }
 }
@@ -147,38 +152,41 @@ void keyPressed() {
      if (keyCode == UP) {
       Rotation --;}
       else if(keyCode == RIGHT){
-        movimientox += 30; 
         ColumnaEnJuego += 1;
+        if(GuadarEnMatriz(FichaEnJuego) ==false)
+           movimientox += 30; 
+        else
+           ColumnaEnJuego -= 1;
       }
       else if(keyCode == LEFT){
-        movimientox -= 30;
         ColumnaEnJuego -= 1;
+        if(GuadarEnMatriz(FichaEnJuego) ==false)
+           movimientox -= 30; 
+        else
+           ColumnaEnJuego += 1;
     }
       else if(keyCode == DOWN){
          TIEMPO(45);
       }
-   if (movimientox < 250)
-       movimientox = 250; 
-   if (movimientox > 580)
-       movimientox = 580; }
    Rotation = Rotation < 0 ? 3 : Rotation % 4;
+   }
 }
-void GuadarEnMatriz( int t)
-{
+public Boolean GuadarEnMatriz(int t){
 int l = ColumnaEnJuego;
 int z = FilaEnJuego;
 int BitParaProbar = 32768;
+Boolean Coliciona = false;
 for (int m = 0; m < 16; m++) {      
      if ((t & BitParaProbar)!= 0)
-       { 
+       {
          if (matrix[z][l] == 0 ){
              if (FijarFicha == true){
-                  matrix[z][l] = 1;}
+                  matrix[z][l] = 1;
+                  }
            }
           else
              {
                Coliciona= true;
-               break;    
              }
      }
      if (l >(ColumnaEnJuego + 2)){
@@ -186,7 +194,7 @@ for (int m = 0; m < 16; m++) {
           z += 1;}
            else{
                 l++;} 
-     BitParaProbar = BitParaProbar >> 1;
+     BitParaProbar = BitParaProbar >> 1;    
   }
 System.out.println("Inicio Juego");
 for (int k = 0; k < matrix.length; k++) {
@@ -194,4 +202,6 @@ for (int k = 0; k < matrix.length; k++) {
                 System.out.print(matrix[k][j] + " ");}
   System.out.println();
      }
+FijarFicha = false;
+return Coliciona;
 }
