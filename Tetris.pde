@@ -19,9 +19,6 @@ int ColumnaEnJuego = 9;
 Boolean FijarFicha = false;
 int FichaEnJuego;
 int pindice;
-ArrayList<Integer> ListaFigurasEnTablero = new ArrayList<Integer>(5);
-ArrayList<Integer> ListaCoorXEnTablero = new ArrayList<Integer>(5);
-ArrayList<Integer> ListaCoorYEnTablero = new ArrayList<Integer>(5);
 void setup()
    {
    img = loadImage("postertetris.png");
@@ -55,6 +52,20 @@ void draw()
    rect(215, 45, 470, 630);
    fill(0);
    rect(250, 60, 420, 600, 7);
+   stroke(56,51,47);
+   for(int i = 250; i<640; i += 30)
+   {
+     lineasy(i,60);
+   }
+   for(int j = 60; j<630; j += 30)
+   {
+     lineasx(250,j);
+   } 
+   stroke(255);
+   drawFigura();
+   BajarFicha(500);
+   DibujarFichasFijas();
+   EliminarFila();
    strokeWeight(2);
    fill(240,200,159);
    rect(215, 45, 20, 630);
@@ -92,32 +103,24 @@ void draw()
    line(58, 82, 65, 90);
    image(img, 65, 90, 90, 130);
    strokeWeight(1);
-   stroke(56,51,47);
-   for(int i = 250; i<640; i += 30)
-   {
-     lineasy(i,60);
-   }
-   for(int j = 60; j<630; j += 30)
-   {
-     lineasx(250,j);
-   }
-   stroke(235);
-   drawFigura();
-   BajarFicha(500);
-   if (ListaFigurasEnTablero.isEmpty()== false){
-     for (int i=0;i<ListaFigurasEnTablero.size();i++){
-       Rotar(#94C0FF,ListaFigurasEnTablero.get(i),ListaCoorXEnTablero.get(i),ListaCoorYEnTablero.get(i));}
-    }
+   stroke(255);
    fill(#FFBA38);
    square(770, 400, 35);
    square(805, 400, 35);
    square(805, 435, 35);
    square(805, 470, 35);
 }
+void DibujarFichasFijas(){
+   for (int indiceM = 0 ; indiceM < 20 ;indiceM ++){
+        for (int jM = 1; jM < 15; jM++) {
+            if (matrix[indiceM][jM] != 0){
+               fill(#94C0FF);
+               rect(220 + (jM * 30), 60 + (indiceM * 30), 30, 30);
+                }
+          }
+        }
+      }
 void IniciarVariables(){
-  ListaFigurasEnTablero.add(FichaEnJuego);
-  ListaCoorXEnTablero.add(movimientox);
-  ListaCoorYEnTablero.add(movimientoy);
   FilaEnJuego = 0;
   ColumnaEnJuego = 9;
   Rotation = 0;
@@ -221,23 +224,22 @@ for (int m = 0; m < 16; m++) {
           z += 1;}
            else{
                 l++;} 
-     BitParaProbar = BitParaProbar >> 1;    
+     BitParaProbar = BitParaProbar >> 1;  
   }
 FijarFicha = false;
 return Coliciona;
 }
-void EliminarFilas(){
-int Eliminarfilas =0;
+void EliminarFila(){
 Boolean siEliminarFila= true;
-for (int i = 20 ; i >0 ;i --){
+for (int iME = 19 ; iME >0 ;iME --){
         siEliminarFila = true;
-        for (int j = 0; j < 16; j++) {
-                if (matrix[i][j] == 0 ){
+        for (int jME = 0; jME < 16; jME ++) {
+                if (matrix[iME][jME] == 0 ){
                    siEliminarFila = false;
                 }
         }
         if (siEliminarFila){
-             for (int k = i; k >=0; k--) {
+              for (int k = iME; k >=0; k--) {
                 for (int m = 0; m < 16; m++) {
                  if (k !=0){
                      matrix [k][m] = matrix [k- 1][m];
@@ -248,11 +250,12 @@ for (int i = 20 ; i >0 ;i --){
                       matrix [k][m] = 0;
                       matrix [k][15]= 1;
                  
-             }  
-        }
- 
-    }
-            
-        }
+                   }  
+           
+                }
+            }
+           
+                     iME =iME +1;
+          }
+     }
 }
-System.out.println("Filas a Eliminar " + Eliminarfilas);
