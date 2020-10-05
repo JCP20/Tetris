@@ -129,8 +129,7 @@ void IniciarVariables(){ //Inicia las variables para cada tetromino
   PiezaRandom = ProximaFicha;
   ProximaFicha = Piezas[int(random(7))];
   movimientoy = 30;
-  movimientox = 490; 
-}
+  movimientox = 490; }
 void Rotar(int colour, int lista, int x, int y){
 fill(colour);
 for (int i = 0; i <= 15; i++) {
@@ -233,10 +232,8 @@ for (int m = 0; m < 16; m++) {
                   matrix[z][l] = 1;  //Dibuja la ficha en la Matriz del tablero
                   }
            }
-          else
-             {
-               Coliciona= true;
-             }
+          else{
+               Coliciona= true; }
      }
      if (l >(ColumnaEnJuego + 2)){
           l =ColumnaEnJuego;
@@ -251,9 +248,8 @@ FijarFicha = false;
 return Coliciona;
 }
 void EliminarFila(){
-Boolean siEliminarFila= true;
 for (int iME = 19 ; iME >0 ;iME --){
-        siEliminarFila = true;
+        Boolean siEliminarFila = true;
         for (int jME = 0; jME < 16; jME ++) {
                 if (matrix[iME][jME] == 0 ){
                    siEliminarFila = false;}
