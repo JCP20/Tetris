@@ -1,5 +1,6 @@
 PImage img; 
 PFont myFont;
+PFont MyFont;
 int [] L = {17504, 3712, 50240, 736};
 int [] T = {3648, 19520, 19968, 17984};
 int [] J = {17600, 36352, 25664, 3616};
@@ -17,8 +18,11 @@ int [][] matrix = new int [21][16];
 int FilaEnJuego = 0;
 int ColumnaEnJuego = 9;
 Boolean FijarFicha = false;
+Boolean Perder = false;
 int FichaEnJuego;
 int pindice;
+int score;
+int FilasCompletas;
 void setup()
    {
    img = loadImage("postertetris.png");
@@ -27,7 +31,6 @@ void setup()
    myFont = createFont("Showcard Gothic", 20);
    textFont(myFont);
    textAlign(CENTER, CENTER);
-   text("JULIANA", 800, 680);
    for(int indice = 0; indice <20;indice ++){
        pindice =  pindice >= 15 ? 15 : indice;
        matrix [indice][0] = 1;
@@ -62,10 +65,7 @@ void draw()
      lineasx(250,j);
    } 
    stroke(255);
-   drawFigura();
-   BajarFicha(500);
-   DibujarFichasFijas();
-   EliminarFila();
+   stroke(56,51,47);
    strokeWeight(2);
    fill(240,200,159);
    rect(215, 45, 20, 630);
@@ -109,14 +109,31 @@ void draw()
    square(805, 400, 35);
    square(805, 435, 35);
    square(805, 470, 35);
+   drawFigura();
+   BajarFicha(500);
+   DibujarFichasFijas();
+   EliminarFila();
+   if (Perder == true){
+      fill(0);
+      rect(250, 60, 420, 600, 7);
+      fill(255);
+      MyFont = createFont("Showcard Gothic", 40);
+      textFont(MyFont);
+      text("You", 450, 320);
+      text("Lost", 450, 390);}
+   else{
+   fill(255);
+   text("SCORE", 805, 130);
+   text(score, 805, 190);
+   text("LINEAS", 115, 430);
+   text(FilasCompletas, 115, 490);}
 }
 void DibujarFichasFijas(){
    for (int indiceM = 0 ; indiceM < 20 ;indiceM ++){
         for (int jM = 1; jM < 15; jM++) {
             if (matrix[indiceM][jM] != 0){
                fill(#94C0FF);
-               rect(220 + (jM * 30), 60 + (indiceM * 30), 30, 30);
-                }
+               rect(220 + (jM * 30), 60 + (indiceM * 30), 30, 30); }
           }
         }
       }
@@ -197,6 +214,7 @@ void keyPressed() {
     }
       else if(keyCode == DOWN){
          BajarFicha(45);
+         score += 5;
       }
    Rotation = Rotation < 0 ? 3 : Rotation % 4;
    }
@@ -206,7 +224,8 @@ int l = ColumnaEnJuego; // Para recorrer las columnas para evaluar colisiones si
 int z = FilaEnJuego;
 int BitParaProbar = 32768; // Número entero del número binario 10000000000000000
 Boolean Coliciona = false;
-for (int m = 0; m < 16; m++) {      
+for (int m = 0; m < 16; m++) {
+  try{
      if ((t & BitParaProbar)!= 0)
        {
          if (matrix[z][l] == 0 ){
@@ -224,7 +243,9 @@ for (int m = 0; m < 16; m++) {
           z += 1;}
            else{
                 l++;} 
-     BitParaProbar = BitParaProbar >> 1;  
+     BitParaProbar = BitParaProbar >> 1;}
+   catch(RuntimeException ex){
+         Perder = true;}
   }
 FijarFicha = false;
 return Coliciona;
@@ -235,8 +256,7 @@ for (int iME = 19 ; iME >0 ;iME --){
         siEliminarFila = true;
         for (int jME = 0; jME < 16; jME ++) {
                 if (matrix[iME][jME] == 0 ){
-                   siEliminarFila = false;
-                }
+                   siEliminarFila = false;}
         }
         if (siEliminarFila){
               for (int k = iME; k >=0; k--) {
@@ -244,18 +264,17 @@ for (int iME = 19 ; iME >0 ;iME --){
                  if (k !=0){
                      matrix [k][m] = matrix [k- 1][m];
                     }
-                 else {
-               
+                 else {        
                       matrix [k][0] = 1;
                       matrix [k][m] = 0;
-                      matrix [k][15]= 1;
-                 
+                      matrix [k][15]= 1;                
                    }  
            
                 }
-            }
-           
+            }         
                      iME =iME +1;
+                     score += 50;
+                     FilasCompletas += 1;
           }
      }
 }
