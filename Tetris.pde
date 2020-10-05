@@ -23,6 +23,7 @@ int FichaEnJuego;
 int pindice;
 int score;
 int FilasCompletas;
+String ProximaFicha = PiezaRandom;
 void setup()
    {
    img = loadImage("postertetris.png");
@@ -31,43 +32,32 @@ void setup()
    myFont = createFont("Showcard Gothic", 25);
    textFont(myFont);
    textAlign(CENTER, CENTER);
-   for(int indice = 0; indice <20;indice ++){
+   for(int indice = 0; indice <20;indice ++){ // Pone los unos en para los limites
        pindice =  pindice >= 15 ? 15 : indice;
        matrix [indice][0] = 1;
        matrix [indice][15]= 1;
        matrix [20][pindice] = 1;}
    }
-void ElimanarFila()
-  { 
-     }
-void lineasy(int x, int y)
-  {
-    line(x + 30, y, x + 30, 660);
-   }
-void lineasx(int x, int y)
-  {
-    line(x, y + 30, 670, y + 30);
-   }
+void lineasy(int x, int y){  // Dibuja las lineas de la cuadricula
+    line(x + 30, y, x + 30, 660); }
+void lineasx(int x, int y){
+    line(x, y + 30, 670, y + 30);}
 void draw()
 {  
    stroke(0);
    fill(185,131,77);
    rect(215, 45, 470, 630);
-   fill(0);
+   fill(0); // Rectangulo de cuadricula
    rect(250, 60, 420, 600, 7);
    stroke(56,51,47);
-   for(int i = 250; i<640; i += 30)
-   {
-     lineasy(i,60);
-   }
-   for(int j = 60; j<630; j += 30)
-   {
-     lineasx(250,j);
-   } 
+   for(int i = 250; i<640; i += 30) { //Cuadricula
+     lineasy(i,60);}
+   for(int j = 60; j<630; j += 30){
+     lineasx(250,j);} 
    stroke(255);
    stroke(56,51,47);
    strokeWeight(2);
-   fill(240,200,159);
+   fill(240,200,159); // Realiza los marcos - decoracion
    rect(215, 45, 20, 630);
    rect(685, 45, 20, 630);
    rect(235, 25, 450, 20);
@@ -89,7 +79,7 @@ void draw()
    rect(750, 350, 120, 220);
    rect(58, 83, 105, 145);
    ellipse(805, 160, 140, 230);
-   fill(120);
+   fill(130);
    ellipse(805, 160, 130, 220);
    rect(760, 360, 100, 200);
    rect(62, 325, 105, 250);
@@ -101,15 +91,10 @@ void draw()
    line(164, 228, 138, 205);
    line(164, 82, 138, 110);
    line(58, 82, 65, 90);
-   image(img, 65, 90, 90, 130);
+   image(img, 65, 90, 90, 130); // Pone la imagen
    strokeWeight(1);
    stroke(255);
-   fill(#FFBA38);
-   square(770, 400, 35);
-   square(805, 400, 35);
-   square(805, 435, 35);
-   square(805, 470, 35);
-   drawFigura();
+   drawFigura(); 
    BajarFicha(500);
    DibujarFichasFijas();
    EliminarFila();
@@ -129,7 +114,7 @@ void draw()
    text(FilasCompletas, 115, 490);}
 }
 void DibujarFichasFijas(){
-   for (int indiceM = 0 ; indiceM < 20 ;indiceM ++){
+   for (int indiceM = 0 ; indiceM < 20 ;indiceM ++){ // Loop por cada cuadro cuadricula para ver si esta ocupado.
         for (int jM = 1; jM < 15; jM++) {
             if (matrix[indiceM][jM] != 0){
                fill(#94C0FF);
@@ -137,18 +122,19 @@ void DibujarFichasFijas(){
           }
         }
       }
-void IniciarVariables(){
+void IniciarVariables(){ //Inicia las variables para cada tetromino
   FilaEnJuego = 0;
   ColumnaEnJuego = 9;
   Rotation = 0;
-  PiezaRandom = Piezas[int(random(7))];
+  PiezaRandom = ProximaFicha;
+  ProximaFicha = Piezas[int(random(7))];
   movimientoy = 30;
   movimientox = 490; 
 }
-void Rotar(int colour, int FichaADibujar, int x, int y){
+void Rotar(int colour, int lista, int x, int y){
 fill(colour);
 for (int i = 0; i <= 15; i++) {
-  if ((FichaADibujar & (1 << 15 - i)) != 0) {
+  if ((lista & (1 << 15 - i)) != 0) {
      rect((i % 4) * 30 + x, (((i / 4) | 0) * 30) + y , 30, 30); } 
   }
  }
@@ -168,7 +154,7 @@ void BajarFicha(int rangoTiempo){
 }
 void drawFigura() {
   push();
-  if ( PiezaRandom == "T"){
+  if ( PiezaRandom == "T"){  // Dibuja Tetromino
      FichaEnJuego = T[Rotation];
      Rotar(#CA08CD, FichaEnJuego, movimientox, movimientoy); }
   if (PiezaRandom == "L"){
@@ -176,7 +162,7 @@ void drawFigura() {
      Rotar(#FFBA38, FichaEnJuego, movimientox, movimientoy);}
   if (PiezaRandom == "J"){
      FichaEnJuego = J[Rotation];
-     Rotar(#7AF0F9, FichaEnJuego, movimientox, movimientoy);}
+     Rotar(#7AF0F9, J[Rotation], movimientox, movimientoy);}
   if (PiezaRandom == "O"){
      FichaEnJuego = O[Rotation];
      Rotar(#F9F227, FichaEnJuego, movimientox, movimientoy);}
@@ -185,10 +171,24 @@ void drawFigura() {
       Rotar(#EE1106, FichaEnJuego, movimientox, movimientoy);}
   if (PiezaRandom == "Z"){
        FichaEnJuego = Z[Rotation];
-       Rotar(#67BD52, FichaEnJuego,movimientox, movimientoy);}
-   if (PiezaRandom == "I"){
+       Rotar(#67BD52, FichaEnJuego ,movimientox, movimientoy);}
+  if (PiezaRandom == "I"){
        FichaEnJuego = I[Rotation];
        Rotar(#4248FF, FichaEnJuego, movimientox, movimientoy);}
+    if ( ProximaFicha == "T"){ // Dibuja Proxima Ficha
+     Rotar(#CA08CD, T[0], 765, 400); }
+  if (ProximaFicha == "L"){
+     Rotar(#FFBA38, L[0], 755, 410);}
+  if (ProximaFicha == "J"){
+     Rotar(#7AF0F9, J[0],778, 410);}
+  if (ProximaFicha == "O"){
+     Rotar(#F9F227, O[0], 780, 420);}
+  if (ProximaFicha == "S"){
+      Rotar(#EE1106, S[0], 765, 400);}
+  if (ProximaFicha == "Z"){
+       Rotar(#67BD52, Z[0] ,765, 400);}
+  if (ProximaFicha == "I"){
+       Rotar(#4248FF, I[0], 710, 400);}
   pop();
 }
 void keyPressed() {
@@ -262,14 +262,13 @@ for (int iME = 19 ; iME >0 ;iME --){
               for (int k = iME; k >=0; k--) {
                 for (int m = 0; m < 16; m++) {
                  if (k !=0){
-                     matrix [k][m] = matrix [k- 1][m];
+                     matrix [k][m] = matrix [k- 1][m]; 
                     }
                  else {        
                       matrix [k][0] = 1;
                       matrix [k][m] = 0;
                       matrix [k][15]= 1;                
-                   }  
-           
+                   }            
                 }
             }         
                      iME =iME +1;
