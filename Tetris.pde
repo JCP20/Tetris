@@ -60,11 +60,11 @@ void draw()
    rect(215, 45, 20, 630);
    rect(685, 45, 20, 630);
    rect(235, 25, 450, 20);
-   rect(235, 675, 450, 20);
+   rect(235, 675, 450, 23);
    rect(215, 25, 20, 20);
-   rect(215, 675, 20, 20);
+   rect(215, 675, 20, 23);
    rect(685, 25, 20, 20);
-   rect(685, 675, 20, 20);
+   rect(685, 675, 20, 23);
    line(235, 45, 255, 65);
    line(235, 675, 255, 655);
    line(665, 65, 685, 45);
@@ -144,32 +144,31 @@ void BajarFicha(int rangoTiempo){
      FilaEnJuego -= 1;
      GuadarEnMatriz(FichaEnJuego);
      IniciarVariables();
-     
   }
 }
 void drawFigura() {
   push();
-  if ( PiezaRandom == "T")
+  if ( PiezaRandom == "T"){
      FichaEnJuego = T[Rotation];
-     Rotar(#CA08CD, FichaEnJuego, movimientox, movimientoy); 
-  if (PiezaRandom == "L")
+     Rotar(#CA08CD, FichaEnJuego, movimientox, movimientoy); }
+  if (PiezaRandom == "L"){
      FichaEnJuego = L[Rotation];
-     Rotar(#FFBA38, FichaEnJuego, movimientox, movimientoy);
-  if (PiezaRandom == "J")
+     Rotar(#FFBA38, FichaEnJuego, movimientox, movimientoy);}
+  if (PiezaRandom == "J"){
      FichaEnJuego = J[Rotation];
-     Rotar(#7AF0F9, FichaEnJuego, movimientox, movimientoy);
-  if (PiezaRandom == "O")
+     Rotar(#7AF0F9, FichaEnJuego, movimientox, movimientoy);}
+  if (PiezaRandom == "O"){
      FichaEnJuego = O[Rotation];
-     Rotar(#F9F227, FichaEnJuego, movimientox, movimientoy);
-  if (PiezaRandom == "S")
+     Rotar(#F9F227, FichaEnJuego, movimientox, movimientoy);}
+  if (PiezaRandom == "S"){
       FichaEnJuego = S[Rotation];
-      Rotar(#EE1106, FichaEnJuego, movimientox, movimientoy);
-  if (PiezaRandom == "Z")
+      Rotar(#EE1106, FichaEnJuego, movimientox, movimientoy);}
+  if (PiezaRandom == "Z"){
        FichaEnJuego = Z[Rotation];
-       Rotar(#67BD52, FichaEnJuego,movimientox, movimientoy);
-   if (PiezaRandom == "I")
+       Rotar(#67BD52, FichaEnJuego,movimientox, movimientoy);}
+   if (PiezaRandom == "I"){
        FichaEnJuego = I[Rotation];
-       Rotar(#4248FF, FichaEnJuego, movimientox, movimientoy);
+       Rotar(#4248FF, FichaEnJuego, movimientox, movimientoy);}
   pop();
 }
 void keyPressed() {
@@ -200,16 +199,16 @@ void keyPressed() {
    }
 }
 public Boolean GuadarEnMatriz(int t){
-int l = ColumnaEnJuego;
+int l = ColumnaEnJuego; // Para recorrer las columnas para evaluar colisiones sin modificar la columna real en la que esta la ficha
 int z = FilaEnJuego;
-int BitParaProbar = 32768;
+int BitParaProbar = 32768; // Número entero del número binario 10000000000000000
 Boolean Coliciona = false;
 for (int m = 0; m < 16; m++) {      
      if ((t & BitParaProbar)!= 0)
        {
          if (matrix[z][l] == 0 ){
              if (FijarFicha == true){
-                  matrix[z][l] = 1;
+                  matrix[z][l] = 1;  //Dibuja la ficha en la Matriz del tablero
                   }
            }
           else
@@ -224,12 +223,36 @@ for (int m = 0; m < 16; m++) {
                 l++;} 
      BitParaProbar = BitParaProbar >> 1;    
   }
-System.out.println("Inicio Juego");
-for (int k = 0; k < matrix.length; k++) {
-        for (int j = 0; j < matrix[k].length; j++) {
-                System.out.print(matrix[k][j] + " ");}
-  System.out.println();
-     }
 FijarFicha = false;
 return Coliciona;
 }
+void EliminarFilas(){
+int Eliminarfilas =0;
+Boolean siEliminarFila= true;
+for (int i = 20 ; i >0 ;i --){
+        siEliminarFila = true;
+        for (int j = 0; j < 16; j++) {
+                if (matrix[i][j] == 0 ){
+                   siEliminarFila = false;
+                }
+        }
+        if (siEliminarFila){
+             for (int k = i; k >=0; k--) {
+                for (int m = 0; m < 16; m++) {
+                 if (k !=0){
+                     matrix [k][m] = matrix [k- 1][m];
+                    }
+                 else {
+               
+                      matrix [k][0] = 1;
+                      matrix [k][m] = 0;
+                      matrix [k][15]= 1;
+                 
+             }  
+        }
+ 
+    }
+            
+        }
+}
+System.out.println("Filas a Eliminar " + Eliminarfilas);
