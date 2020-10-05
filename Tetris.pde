@@ -28,7 +28,7 @@ void setup()
    img = loadImage("postertetris.png");
    size(900,700);
    background(207);
-   myFont = createFont("Showcard Gothic", 20);
+   myFont = createFont("Showcard Gothic", 25);
    textFont(myFont);
    textAlign(CENTER, CENTER);
    for(int indice = 0; indice <20;indice ++){
@@ -89,7 +89,7 @@ void draw()
    rect(750, 350, 120, 220);
    rect(58, 83, 105, 145);
    ellipse(805, 160, 140, 230);
-   fill(180);
+   fill(120);
    ellipse(805, 160, 130, 220);
    rect(760, 360, 100, 200);
    rect(62, 325, 105, 250);
